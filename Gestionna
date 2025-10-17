@@ -1,1 +1,655 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestionna — Portfolio Ayoub Hmaoud</title>
+  <style>
+    /* ========== Root & Theme (mixed: auto day/night) ========== */
+    :root{
+      --bg: linear-gradient(135deg,#f7fbff 0%, #f0f7ff 50%, #eef6ff 100%);
+      --card:#ffffff;
+      --text:#0b1724;
+      --muted:#4b5563;
+      --accent:#2563eb;
+      --glass: rgba(255,255,255,0.75);
+      --shadow: 0 8px 24px rgba(16,24,40,0.08);
+      --radius:14px;
+    }
+    :root.dark{
+      /* subtle dark-silver theme */
+      --bg: linear-gradient(135deg,#0b0f12 0%, #081018 50%, #0b1218 100%);
+      --card: rgba(28,28,30,0.6);
+      --text:#e6eef8;
+      --muted:#9aa9bf;
+      --accent:#9ca3af;
+      --glass: rgba(255,255,255,0.03);
+      --shadow: 0 10px 30px rgba(0,0,0,0.6);
+      --radius:12px;
+    }
+
+    /* ========== Basic layout ========== */
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+    body{
+      background: var(--bg);
+      color:var(--text);
+      transition: background .5s, color .4s;
+      line-height:1.45;
+    }
+    .container{max-width:1100px;margin:36px auto;padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent), #7c3aed);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:var(--shadow)
+    }
+    h1{font-size:1.25rem;margin:0}
+    p.lead{margin:6px 0 0;color:var(--muted)}
+
+    /* ========== Controls ========== */
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{
+      background:var(--card);border:0;padding:8px 12px;border-radius:10px;box-shadow:var(--shadow);cursor:pointer;font-weight:600
+    }
+    .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+    .lang-btn{display:flex;gap:8px;align-items:center}
+
+    /* ========== Grid sections ========== */
+    .grid{display:grid;grid-template-columns: 1fr 360px;gap:20px;margin-top:24px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+    /* ========== Card ========== */
+    .card{background:var(--card);backdrop-filter: blur(6px);box-shadow:var(--shadow);border-radius:var(--radius);padding:18px}
+    .profile{display:flex;gap:18px;align-items:center}
+    .avatar{width:96px;height:96px;border-radius:14px;background:linear-gradient(135deg,#f97316,#f43f5e);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:22px}
+    .meta h2{margin:0;font-size:1.1rem}
+    .meta small{color:var(--muted)}
+
+    /* ========== Skills & badges ========== */
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(0,0,0,0.04), rgba(0,0,0,0.02));margin:6px 6px 0 0;font-size:13px}
+    .lang-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));margin:6px 6px 0 0;font-size:13px}
+
+    /* ========== Sections ========== */
+    section{margin-top:18px}
+    section h3{margin:0 0 12px 0;font-size:1.05rem}
+
+    /* ========== Projects & Experience list ========== */
+    .list{display:flex;flex-direction:column;gap:10px}
+    .item{padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2));box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+    .item.dark{background:transparent}
+
+    /* ========== Testimonials (empty area + form) ========== */
+    .test-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:700px){.test-grid{grid-template-columns:1fr}}
+    .testimonial-list{min-height:140px;border-radius:10px;padding:12px;border:1px dashed rgba(0,0,0,0.06);background:var(--glass)}
+    .testimonial-form{display:flex;flex-direction:column;gap:8px}
+
+    input,textarea,select{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);font-size:14px}
+    textarea{min-height:100px;resize:vertical}
+
+    /* ========== Contact & Social ========== */
+    .socials{display:flex;gap:10px;align-items:center}
+    .icon-btn{display:inline-flex;align-items:center;gap:8px;padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:var(--card);cursor:pointer}
+
+    /* ========== Back to top ========== */
+    .back-top{position:fixed;right:18px;bottom:18px;width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer;z-index:999;opacity:0;transform:translateY(30px);transition:opacity .25s,transform .25s}
+    .back-top.show{opacity:1;transform:translateY(0)}
+
+    /* ========== Animations: fade-up via .reveal ========== */
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.9,.2,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ========== Small helpers ========== */
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center}
+    footer{margin:36px 0 80px 0;text-align:center;color:var(--muted)}
+    .flag{font-size:16px;line-height:1}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="reveal" id="topHeader">
+      <div class="brand">
+        <div class="logo">G</div>
+        <div>
+          <h1>Gestionna — Ayoub Hmaoud</h1>
+          <p class="lead">Assistant RH • Passionné par la gestion des ressources humaines</p>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="lang-btn">
+          <button class="btn" id="langToggle" title="Changer la langue">Français ↔ العربية</button>
+        </div>
+        <button class="btn" id="themeToggle" title="Toggle theme">حالة الألوان</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Main column -->
+      <main>
+        <!-- Hero / Intro bilingual -->
+        <section class="card reveal" data-lang="fr">
+          <div class="profile">
+            <div class="avatar">AH</div>
+            <div class="meta">
+              <h2>Ayoub Hmaoud — Assistant RH</h2>
+              <small>Bienvenue sur mon portfolio personnel Gestionna. Je suis passionné par la gestion des ressources humaines et je cherche à développer mes compétences.</small>
+            </div>
+          </div>
+
+          <section style="margin-top:14px;">
+            <h3>Profil</h3>
+            <p>Je m'appelle <strong>Ayoub Hmaoud</strong>, Assistant RH avec une expérience dans la gestion des dossiers du personnel, l'organisation administrative et le suivi des processus liés aux ressources humaines. J’accorde une importance particulière à la rigueur, à l’organisation et à la capacité d’adaptation.</p>
+          </section>
+        </section>
+
+        <section class="card reveal" data-lang="ar" style="display:none;">
+          <div class="profile" dir="rtl">
+            <div class="avatar">AH</div>
+            <div class="meta" style="text-align:right">
+              <h2>أيوب حماود — مساعد في الموارد البشرية</h2>
+              <small class="muted">مرحباً بكم في موقعي الشخصي Gestionna. أعمل في مجال الموارد البشرية وأسعى باستمرار لتطوير مهاراتي الاحترافية.</small>
+            </div>
+          </div>
+
+          <section style="margin-top:14px;">
+            <h3 style="text-align:right">الملف الشخصي</h3>
+            <p style="text-align:right">أنا <strong>أيوب حماود</strong>، مساعد في الموارد البشرية، أمتلك خبرة في إدارة ملفات الموظفين، التنظيم الإداري، ومتابعة العمليات المرتبطة بالموارد البشرية. أتميّز بالدقّة والتنظيم والقدرة على التأقلم مع متطلبات العمل.</p>
+          </section>
+        </section>
+
+        <!-- Experience -->
+        <section class="card reveal" id="experience">
+          <div data-lang="fr">
+            <h3>Expérience</h3>
+            <div class="list">
+              <div class="item">
+                <strong>Assistant RH — 10 mois</strong>
+                <ul>
+                  <li>Gestion des dossiers du personnel (contrats, absences, congés).</li>
+                  <li>Logiciel RH Kelio (pointage, absences, heures supplémentaires).</li>
+                  <li>Excel : suivi d’absentéisme, pointage physique et virtuel.</li>
+                  <li>Suivi administratif et classement des documents.</li>
+                </ul>
+              </div>
+
+              <div class="item">
+                <strong>Magasinier — 10 mois</strong>
+                <ul>
+                  <li>Vérifier les bons de livraison (quantité, qualité, référence).</li>
+                  <li>Optimisation de l’espace : réorganisation pour maximiser le stockage.</li>
+                  <li>Enregistrer les entrées et sorties (logiciel et fiches).</li>
+                  <li>Classement des dossiers (factures, bons de livraison).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div data-lang="ar" style="display:none">
+            <h3 style="text-align:right">الخبرة</h3>
+            <div class="list" dir="rtl">
+              <div class="item" style="text-align:right">
+                <strong>مساعد موارد بشرية — 10 أشهر</strong>
+                <ul>
+                  <li>إدارة ملفات الموظفين (العقود، الغيابات، الإجازات).</li>
+                  <li>العمل على برنامج Kelio لإدارة الحضور والغيابات وساعات العمل الإضافية.</li>
+                  <li>Excel: متابعة الحضور والغيابات والسجلات المادية والرقمية.</li>
+                  <li>المتابعة الإدارية وأرشفة الوثائق.</li>
+                </ul>
+              </div>
+
+              <div class="item" style="text-align:right">
+                <strong>موظف مستودع — 10 أشهر</strong>
+                <ul>
+                  <li>التحقق من أوامر التسليم (الكمية، الجودة، المرجع).</li>
+                  <li>إعادة تنظيم المساحة لتحسين التخزين.</li>
+                  <li>تسجيل المداخل والمخارج (نظام وسجلات ورقية).</li>
+                  <li>أرشفة الفواتير وأوراق التسليم.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="card reveal" id="projects">
+          <div data-lang="fr">
+            <h3>Projets</h3>
+            <div class="list">
+              <div class="item">
+                <strong>Suivi des absences et congés</strong>
+                <p>Création d’un tableau Excel RH pour centraliser les absences et congés.</p>
+              </div>
+              <div class="item">
+                <strong>Classement administratif digital</strong>
+                <p>Organisation et numérisation des dossiers du personnel.</p>
+              </div>
+              <div class="item">
+                <strong>Optimisation d’espace de stockage</strong>
+                <p>Réorganisation du dépôt pour gagner de l’espace et améliorer le flux.</p>
+              </div>
+            </div>
+          </div>
+
+          <div data-lang="ar" style="display:none">
+            <h3 style="text-align:right">المشاريع</h3>
+            <div class="list" dir="rtl">
+              <div class="item" style="text-align:right">
+                <strong>متابعة الغيابات والإجازات</strong>
+                <p>إنشاء جدول Excel مركزي لإدارة الغيابات والإجازات للموظفين.</p>
+              </div>
+              <div class="item" style="text-align:right">
+                <strong>أرشفة إدارية رقمية</strong>
+                <p>تنظيم ورقمنة ملفات الموظفين لسهولة البحث والاسترجاع.</p>
+              </div>
+              <div class="item" style="text-align:right">
+                <strong>تحسين تنظيم المخزون</strong>
+                <p>إعادة تنظيم المستودع لزيادة المساحة وتحسين سير العمل.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="card reveal" id="skills">
+          <div data-lang="fr">
+            <h3>Compétences</h3>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <div class="badge">Kelio (Pointage)</div>
+              <div class="badge">Excel avancé</div>
+              <div class="badge">Gestion des dossiers</div>
+              <div class="badge">Organisation</div>
+              <div class="badge">Sage / Comptabilité</div>
+              <div class="badge">Communication professionnelle</div>
+            </div>
+
+            <div style="margin-top:12px">
+              <strong>Qualités personnelles:</strong>
+              <p class="muted">Organisation • Rigueur • Adaptabilité • Sens du détail</p>
+            </div>
+          </div>
+
+          <div data-lang="ar" style="display:none">
+            <h3 style="text-align:right">المهارات</h3>
+            <div style="display:flex;gap:12px;flex-wrap:wrap" dir="rtl">
+              <div class="badge" style="text-align:right">Kelio (نظام الحضور)</div>
+              <div class="badge" style="text-align:right">Excel متقدم</div>
+              <div class="badge" style="text-align:right">إدارة الملفات</div>
+              <div class="badge" style="text-align:right">التنظيم</div>
+              <div class="badge" style="text-align:right">Sage • محاسبة</div>
+              <div class="badge" style="text-align:right">التواصل المهني</div>
+            </div>
+
+            <div style="margin-top:12px;text-align:right">
+              <strong>الصفات الشخصية:</strong>
+              <p class="muted">تنظيم • دقّة • قابلية للتكيف • اهتمام بالتفاصيل</p>
+            </div>
+          </div>
+
+          <!-- NEW: Languages section inserted directly after Compétences -->
+          <div style="margin-top:14px" data-lang="fr">
+            <h3>Langues</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <div class="lang-badge"><span class="flag">🇲🇦</span><strong>العربية</strong> — langue maternelle</div>
+              <div class="lang-badge"><span class="flag">🇲🇦</span><strong>Tamazight</strong> — langue maternelle</div>
+              <div class="lang-badge"><span class="flag">🇫🇷</span><strong>Français</strong> — bon niveau</div>
+              <div class="lang-badge"><span class="flag">🇬🇧</span><strong>English</strong> — intermédiaire</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px" data-lang="ar" style="display:none">
+            <h3 style="text-align:right">اللغات</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center" dir="rtl">
+              <div class="lang-badge" style="text-align:right"><span class="flag">🇲🇦</span><strong>العربية</strong> — اللغة الأم</div>
+              <div class="lang-badge" style="text-align:right"><span class="flag">🇲🇦</span><strong>تمازيغت</strong> — اللغة الأم</div>
+              <div class="lang-badge" style="text-align:right"><span class="flag">🇫🇷</span><strong>الفرنسية</strong> — مستوى جيد</div>
+              <div class="lang-badge" style="text-align:right"><span class="flag">🇬🇧</span><strong>الإنجليزية</strong> — مستوى متوسط</div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Testimonials -->
+        <section class="card reveal" id="testimonials">
+          <div data-lang="fr">
+            <h3>Témoignages</h3>
+            <div class="test-grid">
+              <div>
+                <div class="testimonial-list" id="testimonialList">
+                  <p class="muted">Aucun témoignage pour le moment. Vous pouvez être le premier à en laisser un !</p>
+                </div>
+              </div>
+
+              <div>
+                <form class="testimonial-form" id="testimonialForm">
+                  <input type="text" id="t_name" placeholder="Nom / الاسم (obligatoire)" required />
+                  <input type="text" id="t_role" placeholder="Rôle (ex: Formateur, Collègue) / الدور" />
+                  <textarea id="t_message" placeholder="Votre témoignage / رسالتك (obligatoire)" required></textarea>
+                  <div style="display:flex;gap:8px">
+                    <button type="submit" class="btn">Envoyer / إرسال</button>
+                    <button type="button" class="btn secondary" id="t_reset">Effacer / مسح</button>
+                  </div>
+                  <small class="muted">Les témoignages seront ajoutés localement au portfolio (côté client).</small>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <div data-lang="ar" style="display:none">
+            <h3 style="text-align:right">الشهادات</h3>
+            <div class="test-grid" dir="rtl">
+              <div>
+                <div class="testimonial-list" id="testimonialListAr">
+                  <p class="muted">لا توجد شهادات حتى الآن. يمكنك أن تكون أول من يترك شهادة!</p>
+                </div>
+              </div>
+
+              <div>
+                <form class="testimonial-form" id="testimonialFormAr">
+                  <input type="text" id="t_name_ar" placeholder="الاسم / Nom (مطلوب)" required />
+                  <input type="text" id="t_role_ar" placeholder="الدور (مثال: مدرب، زميل)" />
+                  <textarea id="t_message_ar" placeholder="رسالتك / Témoignage (مطلوب)" required></textarea>
+                  <div style="display:flex;gap:8px;justify-content:flex-end">
+                    <button type="submit" class="btn">إرسال / Envoyer</button>
+                    <button type="button" class="btn secondary" id="t_reset_ar">مسح / Effacer</button>
+                  </div>
+                  <small class="muted">ستضاف الشهادات محليًا داخل العرض (جهة العميل).</small>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Education -->
+        <section class="card reveal" id="education">
+          <div data-lang="fr">
+            <h3>Formation & Diplômes</h3>
+            <ul>
+              <li><strong>Baccalauréat</strong> – Okba Ibn Nafie, 2020 (Science Physique)</li>
+              <li><strong>Licence en Gestion</strong> – Faculté Ibn Zohr, Ait Melloul, 2025</li>
+              <li><strong>Aide Comptable</strong> – Skills Studies (10/2023 – 01/2024) — Sage Comptable</li>
+              <li><strong>Diplôme International</strong> – American Institute (10/2024 – 07/2025) — Comptabilité, Microsoft Office, Sage</li>
+            </ul>
+          </div>
+
+          <div data-lang="ar" style="display:none">
+            <h3 style="text-align:right">التكوين والشهادات</h3>
+            <ul dir="rtl" style="text-align:right">
+              <li><strong>البكالوريا</strong> – ثانوية عقبة بن نافع، 2020 (علوم فيزيائية)</li>
+              <li><strong>الإجازة في التسيير</strong> – كلية إبن زهر، آيت ملول، 2025</li>
+              <li><strong>مساعد محاسبي</strong> – Skills Studies (10/2023 – 01/2024) — Sage محاسبة</li>
+              <li><strong>دبلوم دولي</strong> – American Institute (10/2024 – 07/2025) — محاسبة، Microsoft Office، Sage</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Contact form -->
+        <section class="card reveal" id="contact">
+          <div data-lang="fr">
+            <h3>Contact</h3>
+            <form id="contactForm" style="display:flex;flex-direction:column;gap:8px">
+              <input type="text" id="c_name" placeholder="Nom / الاسم" required />
+              <input type="email" id="c_email" placeholder="Email" required />
+              <textarea id="c_message" placeholder="Message" required></textarea>
+              <div style="display:flex;gap:8px">
+                <button class="btn" type="submit">Envoyer / إرسال</button>
+                <button type="button" class="btn secondary" id="contactReset">Réinitialiser / إعادة</button>
+              </div>
+              <small class="muted">Formulaire envoyé côté client (intégré). Pour un envoi réel configurez un backend ou un service email (ex: Formspree, Netlify Forms).</small>
+            </form>
+          </div>
+
+          <div data-lang="ar" style="display:none">
+            <h3 style="text-align:right">التواصل</h3>
+            <form id="contactFormAr" style="display:flex;flex-direction:column;gap:8px" dir="rtl">
+              <input type="text" id="c_name_ar" placeholder="الاسم" required />
+              <input type="email" id="c_email_ar" placeholder="البريد الإلكتروني" required />
+              <textarea id="c_message_ar" placeholder="رسالتك" required></textarea>
+              <div style="display:flex;gap:8px;justify-content:flex-end">
+                <button class="btn" type="submit">إرسال / Envoyer</button>
+                <button type="button" class="btn secondary" id="contactResetAr">إعادة / Réinitialiser</button>
+              </div>
+              <small class="muted">يتم معالجة النموذج محليًا في العرض. لعمل إرسال حقيقي استخدم خدمة بريد أو باكند.</small>
+            </form>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="card reveal">
+          <h3>Contact & Réseaux</h3>
+          <p class="muted">Vous pouvez me contacter via :</p>
+          <div style="margin-top:8px" class="socials">
+            <a class="icon-btn" href="#" id="linkedinBtn" title="LinkedIn (à renseigner)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="4" fill="currentColor"></rect></svg>
+              <span>LinkedIn</span>
+            </a>
+
+            <a class="icon-btn" href="mailto:Hmaoud.ayoub1@gmail.com" title="Email">
+              <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5v-11z"></path></svg>
+              <span>Email</span>
+            </a>
+
+            <a class="icon-btn" href="#" id="whatsappBtn" title="WhatsApp (à renseigner)">
+              <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 12.004A8 8 0 1 0 6.072 18.1L4 20l1.9-2.07A7.968 7.968 0 0 0 20 12.004z"></path></svg>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+
+          <section style="margin-top:12px">
+            <h4>Quick Info</h4>
+            <p class="muted" style="margin:6px 0 0 0">Titre: Assistant RH <br/>Localisation: Maroc</p>
+          </section>
+        </div>
+
+        <div class="card reveal" style="margin-top:14px">
+          <h3>Compétences clés</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+            <div class="badge">Gestion dossiers • Contrats</div>
+            <div class="badge">Kelio • Pointage</div>
+            <div class="badge">Excel avancé</div>
+            <div class="badge">Organisation • Archivage</div>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+
+    <footer class="reveal">
+      © <span id="year"></span> Gestionna — Ayoub Hmaoud. Tous droits réservés / جميع الحقوق محفوظة.
+    </footer>
+  </div>
+
+  <!-- Back to top -->
+  <button class="back-top" id="backTop" aria-label="Back to top">
+    ⬆
+  </button>
+
+  <script>
+    /* ========== Utilities ========== */
+    const root = document.documentElement;
+    const body = document.body;
+    // show year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ========== Auto theme (mixed) based on local hour, with toggle ========== */
+    function applyAutoTheme(){
+      try{
+        const h = new Date().getHours();
+        if(h >= 7 && h < 19){
+          root.classList.remove('dark');
+        }else{
+          root.classList.add('dark');
+        }
+      }catch(e){ root.classList.remove('dark'); }
+    }
+    applyAutoTheme();
+
+    // Allow user to toggle (overrides auto until reload)
+    document.getElementById('themeToggle').addEventListener('click', () => {
+      if(root.classList.contains('dark')) root.classList.remove('dark');
+      else root.classList.add('dark');
+    });
+
+    /* ========== Language toggle (Français <-> العربية) ========== */
+    const langToggle = document.getElementById('langToggle');
+    let currentLang = 'fr';
+    function showLang(lang){
+      currentLang = lang;
+      // show/hide any element with data-lang attribute or children with data-lang
+      document.querySelectorAll('[data-lang]').forEach(el=>{
+        const v = el.getAttribute('data-lang');
+        if(v === lang) el.style.display = '';
+        else el.style.display = 'none';
+      });
+      // also handle nested data-lang inside sections (some elements use data-lang on inner divs)
+      document.querySelectorAll('[data-lang]').forEach(el=>{
+        if(el.getAttribute('data-lang') === lang) el.style.display = '';
+      });
+
+      // direction toggle and alignment
+      if(lang === 'ar'){
+        document.documentElement.lang = 'ar';
+        document.documentElement.dir = 'rtl';
+        document.querySelectorAll('.meta').forEach(m => m.style.textAlign = 'right');
+        // align forms and lists to RTL where appropriate
+        document.querySelectorAll('section').forEach(s=>{
+          if(s.querySelector('[data-lang="ar"]')) {
+            s.style.direction = 'rtl';
+          } else {
+            s.style.direction = 'ltr';
+          }
+        });
+      } else {
+        document.documentElement.lang = 'fr';
+        document.documentElement.dir = 'ltr';
+        document.querySelectorAll('.meta').forEach(m => m.style.textAlign = 'left');
+        document.querySelectorAll('section').forEach(s=> s.style.direction = 'ltr');
+      }
+    }
+    langToggle.addEventListener('click', () => {
+      showLang(currentLang === 'fr' ? 'ar' : 'fr');
+    });
+    // default
+    showLang('fr');
+
+    /* ========== Reveal on scroll (smooth animations) ========== */
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.12});
+    revealEls.forEach(el=> io.observe(el));
+
+    /* ========== Back to top ========== */
+    const backTop = document.getElementById('backTop');
+    window.addEventListener('scroll', () => {
+      if(window.scrollY > 300) backTop.classList.add('show');
+      else backTop.classList.remove('show');
+    });
+    backTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+    /* ========== Testimonials form (client-side add) ========== */
+    const tForm = document.getElementById('testimonialForm');
+    const tList = document.getElementById('testimonialList');
+    const tReset = document.getElementById('t_reset');
+
+    if(tForm){
+      tForm.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = document.getElementById('t_name').value.trim();
+        const role = document.getElementById('t_role').value.trim();
+        const msg = document.getElementById('t_message').value.trim();
+        if(!name || !msg) return alert('Please provide name and message.');
+
+        const card = document.createElement('div');
+        card.style.padding = '10px';
+        card.style.borderRadius = '8px';
+        card.style.marginBottom = '8px';
+        card.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06))';
+        card.innerHTML = `<strong>${escapeHtml(name)}</strong> <small class="muted"> ${escapeHtml(role)}</small>
+                          <p style="margin:8px 0 0 0">${escapeHtml(msg)}</p>`;
+        if(tList.querySelector('p.muted')) tList.innerHTML = '';
+        tList.prepend(card);
+        tForm.reset();
+      });
+      tReset.addEventListener('click', ()=> tForm.reset());
+    }
+
+    // Arabic testimonial form (if user switched to Arabic and uses it)
+    const tFormAr = document.getElementById('testimonialFormAr');
+    const tListAr = document.getElementById('testimonialListAr');
+    const tResetAr = document.getElementById('t_reset_ar');
+    if(tFormAr){
+      tFormAr.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const name = document.getElementById('t_name_ar').value.trim();
+        const role = document.getElementById('t_role_ar').value.trim();
+        const msg = document.getElementById('t_message_ar').value.trim();
+        if(!name || !msg) return alert('المرجو إدخال الاسم والرسالة.');
+
+        const card = document.createElement('div');
+        card.style.padding = '10px';
+        card.style.borderRadius = '8px';
+        card.style.marginBottom = '8px';
+        card.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06))';
+        card.innerHTML = `<strong style="display:block;text-align:right">${escapeHtml(name)}</strong>
+                          <small class="muted" style="display:block;text-align:right">${escapeHtml(role)}</small>
+                          <p style="margin:8px 0 0 0;text-align:right">${escapeHtml(msg)}</p>`;
+        if(tListAr && tListAr.querySelector('p.muted')) tListAr.innerHTML = '';
+        if(tListAr) tListAr.prepend(card);
+        tFormAr.reset();
+      });
+      if(tResetAr) tResetAr.addEventListener('click', ()=> tFormAr.reset());
+    }
+
+    /* ========== Contact form (client-side demo) ========== */
+    const contactForm = document.getElementById('contactForm');
+    const contactReset = document.getElementById('contactReset');
+    if(contactForm){
+      contactForm.addEventListener('submit', (e)=> {
+        e.preventDefault();
+        alert('شكراً! / Merci! Votre message a été traité localement. Pour un envoi réel, connectez un service d’email.');
+        contactForm.reset();
+      });
+      contactReset.addEventListener('click', ()=> contactForm.reset());
+    }
+
+    const contactFormAr = document.getElementById('contactFormAr');
+    const contactResetAr = document.getElementById('contactResetAr');
+    if(contactFormAr){
+      contactFormAr.addEventListener('submit', (e)=> {
+        e.preventDefault();
+        alert('شكراً! تم استلام رسالتك محليًا. لاستخدام إرسال حقيقي ربط خدمة بريد.');
+        contactFormAr.reset();
+      });
+      if(contactResetAr) contactResetAr.addEventListener('click', ()=> contactFormAr.reset());
+    }
+
+    /* ========== Helper: escape HTML to avoid injections ========== */
+    function escapeHtml(unsafe){
+      return String(unsafe || '')
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    /* ========== Small accessibility: focus outlines ========== */
+    document.addEventListener('keydown', (e)=> {
+      if(e.key === 'Tab') document.body.classList.add('show-focus');
+    });
+
+  </script>
+</body>
+</html>
 
